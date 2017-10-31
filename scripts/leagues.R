@@ -45,22 +45,24 @@ leagueDates <- NULL
 for (i in 1:length(leagueIds)) {
   leagueDates[i] <-
     leaguesHTML %>%
-    html_nodes(xpath = paste("//*[@id='baseevent-", leagueIds[i], "']/div[1]/div/dl/dd[2]", sep = "")) %>%
+    html_nodes(xpath = paste(
+      "//*[@id='baseevent-",
+      leagueIds[i],
+      "']/div[1]/div/dl/dd[2]",
+      sep = ""
+    )) %>%
     html_text()
 }
 leagueStart <- as.Date(substr(leagueDates, 10, 19))
 leagueEnd <- as.Date(substr(leagueDates, 65, 74))
 
 # Create data frame
-leagues <-
+leaguesDF <-
   data.frame(
-    Id = leagueIds,
+    LeagueId = leagueIds,
     Name = leagueNames,
     Link = leagueLinks,
     Start = leagueStart,
     End = leagueEnd,
     stringsAsFactors = FALSE
   )
-
-
-
