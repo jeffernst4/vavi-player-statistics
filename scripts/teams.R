@@ -23,7 +23,7 @@ teamsDF <- data.frame(
   stringsAsFactors = FALSE
 )
 
-for (i in 24:length(leaguesDF$LeagueId)) {
+for (i in 1:length(leaguesDF$LeagueId)) {
   # Read leagues html page
   teamHTML <-
     read_html(paste(
