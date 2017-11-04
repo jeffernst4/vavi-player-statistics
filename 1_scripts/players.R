@@ -1,33 +1,31 @@
 
-# Setup -----
-
-# Load libraries
-library(rvest)
-library(dplyr)
-
-
-# IDK WHAT TO CALL THIS -----
-
-playersDF <- data.frame(
-  LeagueId = as.character(),
-  TeamId = as.character(),
-  PlayerId = as.character(),
-  stringsAsFactors = FALSE
-)
-
-for (i in 1:length(teamsDF$TeamId)) {
-  # Read leagues html page
-  rosterHTML <-
-    read_html(paste(
-      "http://govavi.leagueapps.com/leagues/",
-      teamsDF$LeagueId[i],
-      "/teamRoster?teamId=",
-      teamsDF$TeamId[i],
-      sep = ""
-    ))
+createPlayers <- function(teams) {
   
-  playerIds <- sapply(
-    strsplit(
+  # Create players data frame
+  playersDF <- data.frame(
+    LeagueId = as.character(),
+    TeamId = as.character(),
+    PlayerId = as.character(),
+    stringsAsFactors = FALSE
+  )
+  
+  # Extract team details
+  for (i in 1:length(teams$TeamId)) {
+    
+    # Read players html page
+    rosterHTML <-
+      read_html(
+        paste(
+          "http://govavi.leagueapps.com/leagues/",
+          teams$LeagueId[i],
+          "/teamRoster?teamId=",
+          teams$TeamId[i],
+          sep = ""
+        )
+      )
+    
+    # Extract player ids
+    playerIds <- sapply(strsplit(
       rosterHTML %>%
         html_nodes(xpath = "//*[@id='teammates-container']/ul") %>%
         html_nodes(xpath = "//*[@class='thumb']") %>%
@@ -36,17 +34,21 @@ for (i in 1:length(teamsDF$TeamId)) {
       "/"
     ), function(x)
       tail(x, 1))
+    
+    # Create players data frame
+    players <- data.frame(
+      LeagueId = teams$LeagueId[i],
+      TeamId = teams$TeamId[i],
+      PlayerId = playerIds,
+      stringsAsFactors = FALSE
+    )
+    
+    # Merge new players with players data frame
+    playersDF <- bind_rows(playersDF, players)
+    
+  }
   
-  teamId <- teamsDF$TeamId[i]
-  
-  leagueId <- teamsDF$LeagueId[i]
-  
-  players <- data.frame(
-    leagueId,
-    teamId,
-    playerIds
-  )
-  
-  playersDF <- bind_rows(playersDF, players)
+  # Return teams data frame
+  return(playersDF)
   
 }

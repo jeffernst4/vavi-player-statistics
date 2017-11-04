@@ -95,8 +95,9 @@ createLeagues <- function(state) {
       stringsAsFactors = FALSE
     )
   
-  # Remove leagues without a start date
+  # Remove leagues without a start date or start dates in the future
   leaguesDF <- leaguesDF[!(is.na(leaguesDF$Start)), ]
+  leaguesDF <- leaguesDF[leaguesDF$Start < as.Date(Sys.Date()), ]
   
   # Return leagues data frame
   return(leaguesDF)
