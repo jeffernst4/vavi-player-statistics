@@ -16,6 +16,9 @@ source("1_scripts/players.R")
 
 leagues <- createLeagues("COMPLETED")
 leagues <- bind_rows(leagues, createLeagues("LIVE"))
+save(leagues, file = "3_results/leagues.RData")
 teams <- createTeams(leagues)
+save(teams, file = "3_results/teams.RData")
 players <- createPlayers(teams)
+save(players, file = "3_results/players.RData")
 

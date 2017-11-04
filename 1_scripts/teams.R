@@ -3,7 +3,7 @@ createTeams <- function(leagues) {
   
   # Create teams data frame
   teamsDF <- data.frame(
-    Name = as.character(),
+    TeamName = as.character(),
     GP = as.numeric(),
     W = as.numeric(),
     L = as.numeric(),
@@ -78,7 +78,7 @@ createTeams <- function(leagues) {
       )
     
     # Rename team column name
-    names(teams)[names(teams) == "Team"] <- "Name"
+    names(teams)[names(teams) == "Team"] <- "TeamName"
     
     # Merge new teams with teams data frame
     teamsDF <- bind_rows(teamsDF, teams)
